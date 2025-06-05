@@ -86,17 +86,30 @@ https://github.com/user-attachments/assets/b313b288-14ba-4a26-9ae9-c9581ca0e865
 - 📹 **[영상 또는 GIF 링크 삽입]**
 - 📝 **설명**: 멤버들이 가능한 날짜를 선택하고, 그 결과를 바탕으로 통계를 집계해 확정 날짜를 제안하는 과정을 시연합니다.
 
+https://github.com/user-attachments/assets/60140683-8f30-418d-bf4b-0f4b7f75c173
+
+
 ---
 
 ### 3. SSE 기반 실시간 알림
 - 📹 **[영상 또는 GIF 링크 삽입]**
 - 📝 **설명**: 친구 요청, 일정 생성, 일정 임박 시점 등에서 실시간 알림이 수신되는 모습을 보여줍니다.
 
+#### 3-1. 친구 요청
+
+https://github.com/user-attachments/assets/a928e68c-bd11-47ad-bdbe-3e72ab562e99
+
+#### 3-2. 일정 생성 및 일정 임박
+
+https://github.com/user-attachments/assets/9d3fa185-3b06-4c74-8664-73f9a58e7419
+
 ---
 
 ### 4. 그룹 단체 채팅
 - 📹 **[영상 또는 GIF 링크 삽입]**
 - 📝 **설명**: 그룹원들과의 실시간 채팅 기능을 활용하는 시나리오를 담은 영상입니다.
+
+https://github.com/user-attachments/assets/d016605e-0a2e-4778-9424-464881606636
 
 ---
 
@@ -109,6 +122,9 @@ https://github.com/user-attachments/assets/b313b288-14ba-4a26-9ae9-c9581ca0e865
 ### 6. 친구 관리 및 추천 기능
 - 📹 **[영상 또는 GIF 링크 삽입]**
 - 📝 **설명**: 친구 요청 보내기, 수락/거절, 추천 친구 확인 기능을 시연합니다.
+
+https://github.com/user-attachments/assets/559a8b01-bfcd-41b2-94f2-95b317717db6
+
 
 ---
 ---
