@@ -16,7 +16,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if (response.isCommitted()) {
-            log.info("스프링 시큐리티 중복 응답");
             return;
         }
 

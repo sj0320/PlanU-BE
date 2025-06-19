@@ -17,6 +17,7 @@ import com.planu.group_meeting.valid.InputValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -94,38 +95,30 @@ public class ChatService {
 
     }
 
-//    @Transactional
-//    public List<ChatRoomResponse> searchChatRooms(Long userId, String searchName) {
-//        if (searchName == null || searchName.trim().isEmpty()) {
-//            return Collections.emptyList();
-//        }
-//
-//        String keyword = searchName.trim().toLowerCase();
-//
-//        List<GroupResponseDTO> groupList = groupDAO.findGroupsByUserId(userId);
-//
-//        return groupList.stream()
-//                .filter(group -> group.getGroupName().toLowerCase().contains(keyword)) // 검색 필터 적용
-//                .map(group -> {
-//                    ChatInfo chatInfo = chatDAO.getChatInfo(group.getGroupId());
-//                    return ChatRoomResponse.builder()
-//                            .groupId(group.getGroupId())
-//                            .groupName(group.getGroupName())
-//                            .groupImageUrl(group.getGroupImageUrl())
-//                            .participant(Long.parseLong(group.getParticipant()))
-//                            .isPin(group.getIsPin())
-//                            .lastChat(Optional.ofNullable(chatInfo).map(ChatInfo::getLastChat).orElse(""))
-//                            .lastChatDate(Optional.ofNullable(chatInfo).map(ChatInfo::getLastChatDate).orElse(""))
-//                            .lastChatTime(Optional.ofNullable(chatInfo).map(ChatInfo::getLastChatTime).orElse(""))
-//                            .unreadChats(chatDAO.countUnreadChatByUserAndGroup(userId, group.getGroupId()))
-//                            .build();
-//                })
-//                .sorted(Comparator.comparing(ChatRoomResponse::getIsPin)
-//                        .reversed()
-//                        .thenComparing(Comparator.comparing(ChatRoomResponse::getLastChatDate).reversed())
-//                        .thenComparing(Comparator.comparing(ChatRoomResponse::getLastChatTime).reversed()))
-//                .collect(Collectors.toList());
-//    }
+    @Transactional
+    public void sendMessage(Long groupId, ChatMessage chatMessage, String username, Integer type, String message) {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String date = chatMessage.getCreatedDate().format(dateFormatter);
+
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String time = chatMessage.getCreatedDate().format(timeFormatter);
+
+        updateReadStatus(chatMessage.getId(), username);
+
+        ChatMessageResponse chatMessageResponse = ChatMessageResponse.builder()
+                .messageId(chatMessage.getId())
+                .type(type)
+                .sender(username)
+                .profileImageUrl(userDAO.findProfileImageById(userDAO.findIdByUsername(username)))
+                .name(userDAO.findNameById(userDAO.findIdByUsername(username)))
+                .message(message)
+                .unReadCount(getUnreadCountforMessage(chatMessage.getId()))
+                .chatTime(time)
+                .chatDate(date)
+                .build();
+
+        simpMessageSendingOperations.convertAndSend("/sub/chat/group/" + groupId, chatMessageResponse);
+    }
 
     @Transactional
     public int getUnreadCountforMessage(Long messageId) {
@@ -137,7 +130,7 @@ public class ChatService {
         return chatDAO.countUnreadByUserId(userId);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void updateReadStatus(Long messageId, String username) {
         Long userId = userDAO.findIdByUsername(username);
 
@@ -159,8 +152,6 @@ public class ChatService {
 
         List<ChatMessage> chatMessageList = chatDAO.findChatMessages(groupId, offset, limit);
 
-        updateMessageStatusAsRead(userId, groupId);
-
         simpMessageSendingOperations.convertAndSend("/sub/chat/group/" + groupId, ChatMessageResponse.builder().type(3).build());
 
         // 메시지 변환 후 그룹화
@@ -175,7 +166,8 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
-    private void updateMessageStatusAsRead(Long userId, Long groupId) {
+    @Transactional
+    public void updateMessageStatusAsRead(Long userId, Long groupId) {
         chatDAO.updateMessageStatusAsRead(userId, groupId);
     }
 

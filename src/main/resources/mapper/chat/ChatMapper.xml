@@ -117,18 +117,21 @@
 
 
     <update id="updateMessageStatusAsRead">
-        UPDATE MESSAGE_STATUS
-        SET IS_READ = TRUE
-        WHERE USER_ID = #{userId}
-        AND MESSAGE_ID IN (
-        SELECT ID FROM CHAT_MESSAGE WHERE GROUP_ID = #{groupId}
-        )
+        UPDATE MESSAGE_STATUS MS
+        INNER JOIN CHAT_MESSAGE CM ON MS.MESSAGE_ID = CM.ID
+        SET MS.IS_READ = TRUE
+        WHERE MS.USER_ID = #{userId}
+          AND CM.GROUP_ID = #{groupId}
+          AND MS.IS_READ = FALSE
     </update>
+
 
     <update id="updateIsReadByMessageId">
         UPDATE MESSAGE_STATUS
         SET IS_READ = TRUE
         WHERE MESSAGE_ID = #{messageId}
+          AND IS_READ = FALSE
     </update>
+
 
 </mapper>

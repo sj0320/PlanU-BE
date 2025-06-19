@@ -22,7 +22,9 @@ public class AvailableDateService {
             availableDateDAO.deleteAllAvailableDates(userId);
             availableDateDAO.insertAvailableDates(userId, requestDates);
         }
-
+        else{
+            availableDateDAO.deleteAllAvailableDates(userId);
+        }
     }
 
 

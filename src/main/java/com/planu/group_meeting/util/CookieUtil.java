@@ -13,7 +13,6 @@ public class CookieUtil {
         cookie.setMaxAge(24 * 60 * 60);
         cookie.setSecure(true);
         cookie.setPath("/");
-//        cookie.setDomain("localhost");
         cookie.setAttribute("SameSite","None");
         cookie.setDomain("15.165.3.168.nip.io");
         cookie.setHttpOnly(true);

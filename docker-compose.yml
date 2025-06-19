@@ -2,15 +2,18 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: openjdk:17-jdk-slim
+    container_name: spring-app-dev
+    working_dir: /app
+    command: ["./gradlew", "bootRun"]
     ports:
       - "8080:8080"
     depends_on:
       - db
       - redis
-    env_file: .env  # .env 파일을 추가하여 환경 변수 로드
+    env_file: .env
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}  # 환경 변수 사용
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       REDIS_HOST: ${REDIS_HOST}
@@ -21,20 +24,22 @@ services:
 
   db:
     image: mariadb:latest
+    container_name: mariadb-dev
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # 환경 변수 사용
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       TZ: Asia/Seoul
     ports:
-      - "${DB_PORT:-3306}:3306"  # DB_PORT 환경 변수를 사용하고 기본값으로 3306 설정
+      - "${DB_PORT:-3306}:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
 
   redis:
     image: redis:latest
+    container_name: redis-dev
     ports:
-      - "${REDIS_PORT:-6379}:6379"  # REDIS_PORT 환경 변수를 사용하고 기본값으로 6379 설정
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
 
