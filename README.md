@@ -46,7 +46,8 @@
 
 ### 🔹 ERD
 
-> ERD 이미지 삽입 (예: ![ERD](링크))
+> <img width="862" alt="스크린샷 2025-07-06 오전 1 52 18" src="https://github.com/user-attachments/assets/d3bd92aa-c687-4cb7-829b-e8b0669ea3a9" />
+
 
 ---
 
